@@ -6,7 +6,7 @@
              android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/button_save_new_appointment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
@@ -22,7 +22,7 @@
         android:layout_marginTop="128dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="customer"
+        android:hint="customer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +34,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="barber"
+        android:hint="barber"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName4" />
@@ -46,7 +46,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="hair style"
+        android:hint="hair style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName5" />
@@ -56,7 +56,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="set next date"
+        android:textColor="#0000FF"
+        android:text="@string/set_next_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName6" />

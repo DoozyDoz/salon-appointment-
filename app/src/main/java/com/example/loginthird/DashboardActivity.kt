@@ -12,5 +12,9 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.buttonCreateAppointment.setOnClickListener {
+            openActivity(CreateAppointmentActivity::class.java)
+        }
     }
 }

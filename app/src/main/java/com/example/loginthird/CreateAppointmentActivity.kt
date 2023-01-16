@@ -12,5 +12,9 @@ class CreateAppointmentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateAppointmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.buttonSaveNewAppointment.setOnClickListener {
+            finish()
+        }
     }
 }

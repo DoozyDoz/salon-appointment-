@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Login third</string>
+    <string name="set_next_date"><u>set next date</u></string>
 </resources>
