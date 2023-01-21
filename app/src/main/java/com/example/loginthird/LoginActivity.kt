@@ -6,6 +6,7 @@ import com.example.loginthird.api.interceptor.TokenInterceptor
 import com.example.loginthird.databinding.ActivityLoginBinding
 import com.example.loginthird.retrofit.ApiLoggedInUser
 import com.example.loginthird.retrofit.ConnectionService
+import com.example.loginthird.retrofit.ReqLogin
 import com.example.loginthird.retrofit.ResponseLogin
 import com.example.loginthird.singleton.User
 import kotlinx.coroutines.*
@@ -40,16 +41,15 @@ class LoginActivity : AppCompatActivity() {
         val exceptionHandler = createExceptionHandler(message = "Failed to search remotely.")
         val api = getApi()
 
-        email=binding.textInputEmail.toString()
-        password=binding.textInputPassword.toString()
+        email = binding.textInputEmail.text.toString()
+        password = binding.textInputPassword.text.toString()
 
         CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            val response = api.login(email, password)
+            val response = api.login(ReqLogin(email, password))
             withContext(Dispatchers.Main) {
                 if (response.loggedInUser != null) {
-                    saveUser(response.loggedInUser) {
-                        function
-                    }
+                    saveUser(response.loggedInUser)
+                    function()
                 } else {
 //                    toast(response.message!!)
                 }
@@ -57,11 +57,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUser(user: ApiLoggedInUser, function: () -> () -> Unit) {
+    private fun saveUser(user: ApiLoggedInUser) {
         User.instance.userId = user.userId
         User.instance.userName = user.name
         User.instance.userRole = user.role
-        function
     }
 
     private fun createExceptionHandler(message: String): CoroutineExceptionHandler {
