@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.1.100</domain>
+        <domain includeSubdomains="true">192.168.10.101</domain>
+        <domain includeSubdomains="true">192.168.1.102</domain>
+        <domain includeSubdomains="true">192.168.43.134</domain>
+        <domain includeSubdomains="true">192.168.43.44</domain>
+        <domain includeSubdomains="true">192.168.43.122</domain>
+        <domain includeSubdomains="true">192.168.43.28</domain>
+        <domain includeSubdomains="true">192.168.43.76</domain>
+        <domain includeSubdomains="true">192.168.43.74</domain>
+        <domain includeSubdomains="true">192.168.146.86</domain>
+        <domain includeSubdomains="true">192.168.137.1</domain>
+        <domain includeSubdomains="true">10.120.7.29</domain>
+        <domain includeSubdomains="true">192.168.16.1</domain>
+        <domain includeSubdomains="true">login-api-256.herokuapp.com</domain>
+    </domain-config>
+
+</network-security-config>
