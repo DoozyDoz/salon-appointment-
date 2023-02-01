@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ReqLogin(
+data class RequestLogin(
     @field:Json(name = "email") val email: String,
     @field:Json(name = "password") var password: String,
 )

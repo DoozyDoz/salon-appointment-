@@ -77,6 +77,17 @@
         app:layout_constraintTop_toBottomOf="@+id/edittext_customer_contact" />
 
     <EditText
+        android:id="@+id/edittext_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Location"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_date_of_birth" />
+  <EditText
         android:id="@+id/edittext_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,7 +97,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_date_of_birth" />
+        app:layout_constraintTop_toBottomOf="@+id/edittext_location" />
 
     <TextView
         android:id="@+id/textView_next_date"
