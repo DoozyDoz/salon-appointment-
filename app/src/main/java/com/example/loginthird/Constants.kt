@@ -15,7 +15,7 @@ fun ensureBackgroundThread(callback: () -> Unit) {
 }
 
 object ApiConstants {
-    const val BASE_ENDPOINT = "http://192.168.10.101:5000/api/v1/"
+    const val BASE_ENDPOINT = "http://192.168.43.202:5000/api/v1/"
     const val AUTH_ENDPOINT = "oauth2/token/"
     const val ANIMALS_ENDPOINT = "animals"
     const val ANIMAL_ENDPOINT = "animal"
