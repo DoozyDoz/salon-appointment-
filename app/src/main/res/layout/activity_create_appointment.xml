@@ -59,7 +59,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="contact"
-        android:inputType="textPersonName"
+        android:inputType="number|textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edittext_customer_name" />
@@ -87,17 +87,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_date_of_birth" />
-  <EditText
-        android:id="@+id/edittext_status"
+
+
+    <Spinner
+        android:id="@+id/status_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:ems="10"
-        android:hint="Status"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/edittext_location"
         app:layout_constraintTop_toBottomOf="@+id/edittext_location" />
+
 
     <TextView
         android:id="@+id/textView_next_date"
@@ -108,7 +107,7 @@
         android:textColor="#0000FF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext_status" />
+        app:layout_constraintTop_toBottomOf="@+id/status_spinner" />
 
     <Button
         android:id="@+id/button_save_new_appointment"
