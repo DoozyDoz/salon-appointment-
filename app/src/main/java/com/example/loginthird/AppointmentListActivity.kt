@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.loginthird.adapter.SessionListAdapter
 import com.example.loginthird.databinding.ActivityAppointmentListBinding
 import com.example.loginthird.models.UISession
-import com.example.loginthird.models.mappers.ApiMapper
 import com.example.loginthird.models.mappers.ApiSessionMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,13 +25,7 @@ class AppointmentListActivity : BaseActivity() {
         val sessionList = findViewById<RecyclerView>(R.id.session_list)
         sessionList.layoutManager = LinearLayoutManager(this)
 
-        val sessions = listOf(
-            UISession("Session 1", false),
-            UISession("Session 2", true),
-            UISession("Session 3", false)
-        )
-
-        getSessionListFromAPI {
+        getSessionListFromAPI { sessions ->
             val adapter = SessionListAdapter(sessions)
             sessionList.adapter = adapter
         }
@@ -40,7 +33,7 @@ class AppointmentListActivity : BaseActivity() {
 
     }
 
-    private fun getSessionListFromAPI(function: () -> Unit) {
+    private fun getSessionListFromAPI(function: (List<UISession>) -> Unit) {
         val exceptionHandler = createExceptionHandler(message = "Failed to search remotely.")
         val api = getApi()
 
@@ -49,10 +42,9 @@ class AppointmentListActivity : BaseActivity() {
             val response = api.getSessions()
             withContext(Dispatchers.Main) {
                 if (response.sessions != null) {
-                    val apiSessionMapper: ApiSessionMapper
+                    val apiSessionMapper: ApiSessionMapper = ApiSessionMapper()
                     val sessions = response.sessions.map { apiSessionMapper.mapToDomain(it) }
-                    saveUser(response.loggedInUser)
-                    function()
+                    function(sessions)
                 } else {
 //                    toast(response.message!!)
                 }
