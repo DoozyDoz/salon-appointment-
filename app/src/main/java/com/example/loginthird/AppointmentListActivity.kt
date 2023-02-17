@@ -5,7 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loginthird.adapter.SessionListAdapter
 import com.example.loginthird.databinding.ActivityAppointmentListBinding
+import com.example.loginthird.retrofit.RequestLogin
 import com.example.loginthird.ui.UISession
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AppointmentListActivity : BaseActivity() {
 
@@ -26,13 +31,29 @@ class AppointmentListActivity : BaseActivity() {
             UISession("Session 3", false)
         )
 
-        getSessionListFromAPI()
+        getSessionListFromAPI {
+            val adapter = SessionListAdapter(sessions)
+            sessionList.adapter = adapter
+        }
 
-        val adapter = SessionListAdapter(sessions)
-        sessionList.adapter = adapter
+
     }
 
-    private fun getSessionListFromAPI() {
+    private fun getSessionListFromAPI(function: () -> Unit) {
+        val exceptionHandler = createExceptionHandler(message = "Failed to search remotely.")
+        val api = getApi()
 
+
+        CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            val response = api.getSessions()
+            withContext(Dispatchers.Main) {
+                if (response.sessions != null) {
+                    saveUser(response.loggedInUser)
+                    function()
+                } else {
+//                    toast(response.message!!)
+                }
+            }
+        }
     }
 }
