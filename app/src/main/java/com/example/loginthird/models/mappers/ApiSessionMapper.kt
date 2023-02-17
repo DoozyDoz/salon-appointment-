@@ -1,7 +1,7 @@
 package com.example.loginthird.models.mappers
 
-import com.example.loginthird.retrofit.ApiSession
-import com.example.loginthird.ui.UISession
+import com.example.loginthird.models.ApiSession
+import com.example.loginthird.models.UISession
 
 
 class ApiSessionMapper : ApiMapper<ApiSession, UISession> {

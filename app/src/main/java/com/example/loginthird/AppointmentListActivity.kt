@@ -5,8 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loginthird.adapter.SessionListAdapter
 import com.example.loginthird.databinding.ActivityAppointmentListBinding
-import com.example.loginthird.retrofit.RequestLogin
-import com.example.loginthird.ui.UISession
+import com.example.loginthird.models.UISession
+import com.example.loginthird.models.mappers.ApiMapper
+import com.example.loginthird.models.mappers.ApiSessionMapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,6 +49,8 @@ class AppointmentListActivity : BaseActivity() {
             val response = api.getSessions()
             withContext(Dispatchers.Main) {
                 if (response.sessions != null) {
+                    val apiSessionMapper: ApiSessionMapper
+                    val sessions = response.sessions.map { apiSessionMapper.mapToDomain(it) }
                     saveUser(response.loggedInUser)
                     function()
                 } else {

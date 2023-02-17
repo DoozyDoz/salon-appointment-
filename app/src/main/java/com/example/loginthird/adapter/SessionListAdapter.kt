@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loginthird.R
-import com.example.loginthird.ui.UISession
+import com.example.loginthird.models.UISession
 
 
 class SessionListAdapter(private val sessions: List<UISession>) :
