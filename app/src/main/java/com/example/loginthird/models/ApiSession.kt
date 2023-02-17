@@ -1,4 +1,4 @@
-package com.example.loginthird.retrofit
+package com.example.loginthird.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
