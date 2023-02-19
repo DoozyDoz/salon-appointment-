@@ -1,6 +1,7 @@
 package com.example.loginthird.activities
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loginthird.BaseActivity
@@ -18,6 +19,8 @@ class AppointmentListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAppointmentListBinding
 
+    val viewModel = ViewModelProvider(this)[AppointmentListViewmodel::class.java]
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +30,20 @@ class AppointmentListActivity : BaseActivity() {
         val sessionList = findViewById<RecyclerView>(R.id.session_list)
         sessionList.layoutManager = LinearLayoutManager(this)
 
-        getSessionListFromAPI { sessions ->
+        viewModel.sessions.observe(this) { sessions ->
             val adapter = SessionListAdapter(sessions)
             sessionList.adapter = adapter
         }
 
+//        getSessionListFromAPI { sessions ->
+//            val adapter = SessionListAdapter(sessions)
+//            sessionList.adapter = adapter
+//        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshSessionsIfNeeded()
     }
 
     private fun getSessionListFromAPI(function: (List<UISession>) -> Unit) {
@@ -44,7 +55,7 @@ class AppointmentListActivity : BaseActivity() {
             val response = api.getSessions()
             withContext(Dispatchers.Main) {
                 if (response.sessions != null) {
-                    val apiSessionMapper: ApiSessionMapper = ApiSessionMapper()
+                    val apiSessionMapper = ApiSessionMapper()
                     val sessions = response.sessions.map { apiSessionMapper.mapToDomain(it) }
                     function(sessions)
                 } else {
