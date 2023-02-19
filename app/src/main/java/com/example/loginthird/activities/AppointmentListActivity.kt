@@ -1,8 +1,10 @@
-package com.example.loginthird
+package com.example.loginthird.activities
 
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.loginthird.BaseActivity
+import com.example.loginthird.R
 import com.example.loginthird.adapter.SessionListAdapter
 import com.example.loginthird.databinding.ActivityAppointmentListBinding
 import com.example.loginthird.models.UISession
