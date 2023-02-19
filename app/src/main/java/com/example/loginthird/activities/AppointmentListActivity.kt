@@ -18,14 +18,14 @@ import kotlinx.coroutines.withContext
 class AppointmentListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityAppointmentListBinding
-
-    val viewModel = ViewModelProvider(this)[AppointmentListViewmodel::class.java]
-
+    private lateinit var viewModel: AppointmentListViewmodel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[AppointmentListViewmodel::class.java]
         binding = ActivityAppointmentListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         val sessionList = findViewById<RecyclerView>(R.id.session_list)
         sessionList.layoutManager = LinearLayoutManager(this)
