@@ -3,4 +3,5 @@
     <string name="set_next_date"><u>set next date</u></string>
     <string name="pick_session_date"><u>pick session date</u></string>
     <string name="pick_date_of_birth"><u>pick date of birth</u></string>
+    <string name="action_refresh">refresh</string>
 </resources>
