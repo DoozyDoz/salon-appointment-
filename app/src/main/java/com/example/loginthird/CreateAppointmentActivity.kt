@@ -59,10 +59,7 @@ class CreateAppointmentActivity : BaseActivity() {
             binding.edittextContact.isEnabled = false
             binding.pickerBirthDate.isEnabled = false
             binding.edittextLocation.isEnabled = false
-//            binding.statusSpinner.isEnabled = false
-//            binding.textViewNextDate.isEnabled = false
             binding.buttonSubmit.text = "Edit"
-            // Load the item details into the edit texts
             loadItemDetails()
         } else {
             isEditMode = true
@@ -202,11 +199,7 @@ class CreateAppointmentActivity : BaseActivity() {
             binding.edittextContact.setText(session.customerContact)
             binding.pickerBirthDate.setText(session.dateOfBirth)
             binding.edittextLocation.setText(session.location)
-
-//            val position = statusSpinnerAdapter?.getPosition(session.status)
-//            if (position != Spinner.INVALID_POSITION) {
-//                binding.statusSpinner.setSelection(position!!)
-//            }
+            binding.pickerStatus.setText(session.status)
             binding.pickerNextDate.setText(session.nextAppointmentDate)
         }
     }
