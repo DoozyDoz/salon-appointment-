@@ -8,7 +8,7 @@ class ApiSessionMapper : ApiMapper<ApiSession, UISession> {
     override fun mapToDomain(apiEntity: ApiSession): UISession {
         return UISession(
             id = apiEntity.sessionId ?: throw MappingException("Session ID cannot be null"),
-            title = apiEntity.sessionDate.orEmpty(),
+            title = apiEntity.nextAppointmentDate.orEmpty(),
             completed = apiEntity.status == "done"
         )
     }
