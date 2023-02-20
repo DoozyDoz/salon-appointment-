@@ -68,7 +68,7 @@ class CreateAppointmentActivity : BaseActivity() {
             binding.textViewDateOfBirth.isEnabled = false
             binding.edittextLocation.isEnabled = false
 //            binding.statusSpinner.isEnabled = false
-            binding.textViewNextDate.isEnabled = false
+//            binding.textViewNextDate.isEnabled = false
             binding.buttonSaveNewAppointment.text = "Edit"
             // Load the item details into the edit texts
             loadItemDetails()
@@ -163,7 +163,7 @@ class CreateAppointmentActivity : BaseActivity() {
                     // Error
                 }
             }
-            finish()
+            function()
         }
 
     }
@@ -176,7 +176,9 @@ class CreateAppointmentActivity : BaseActivity() {
             originalSession = session
             // Load the item details into the edit texts
             binding.textviewSessionDate.text = session!!.sessionDate
+            binding.textviewSessionDate.text = session!!.sessionDate
             binding.edittextService.setText(session.service)
+            binding.edittextBarber.setText(session.barber)
             binding.edittextCustomerName.setText(session.customerName)
             binding.edittextCustomerContact.setText(session.customerContact)
             binding.textViewDateOfBirth.text = session.dateOfBirth
