@@ -1,8 +1,7 @@
 package com.example.loginthird.retrofit
 
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import com.example.loginthird.models.ApiSession
+import retrofit2.http.*
 
 interface ConnectionService {
 
@@ -19,4 +18,10 @@ interface ConnectionService {
     @GET("sessions")
     suspend fun getSessions(
     ): ResponseAppointments
+
+    @PATCH("sessions/{id}")
+    suspend fun editSession(
+        @Path("id") id: String,
+        @Body apiSession: ApiSession
+    ): ResponseCreateSession
 }

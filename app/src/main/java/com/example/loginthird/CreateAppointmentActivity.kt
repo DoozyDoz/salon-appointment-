@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.text.Selection.setSelection
 import android.view.View
 import android.widget.*
+import com.example.loginthird.api.models.CachedSessionToApiSession
 import com.example.loginthird.cache.CachedSession
 import com.example.loginthird.cache.SalonDatabase
 import com.example.loginthird.cache.SessionDao
 import com.example.loginthird.databinding.ActivityCreateAppointmentBinding
 import com.example.loginthird.retrofit.RequestCreateSession
+import com.example.loginthird.retrofit.RetrofitFactory
 import com.example.loginthird.singleton.User
 import kotlinx.coroutines.*
 import java.text.ParseException
@@ -30,7 +32,7 @@ class CreateAppointmentActivity : BaseActivity() {
     private lateinit var location: String
     private lateinit var nextDate: String
 
-    private var sessionDao:SessionDao? = null
+    private var sessionDao: SessionDao? = null
     private var isEditMode = false
     private var sessionId: String? = null
     private var statusSpinnerAdapter: ArrayAdapter<String>? = null
@@ -65,7 +67,7 @@ class CreateAppointmentActivity : BaseActivity() {
             binding.edittextCustomerContact.isEnabled = false
             binding.textViewDateOfBirth.isEnabled = false
             binding.edittextLocation.isEnabled = false
-            binding.statusSpinner.isEnabled = false
+//            binding.statusSpinner.isEnabled = false
             binding.textViewNextDate.isEnabled = false
             binding.buttonSaveNewAppointment.text = "Edit"
             // Load the item details into the edit texts
@@ -78,8 +80,6 @@ class CreateAppointmentActivity : BaseActivity() {
             binding.textviewSessionDate.text = formattedDate
             binding.edittextBarber.setText(User.instance.userName)
         }
-
-
 
 
         val selectedItemPosition = spinner.selectedItemPosition
@@ -132,22 +132,40 @@ class CreateAppointmentActivity : BaseActivity() {
             binding.statusSpinner.selectedItem.toString()
         }
 
-        sessionDao!!.updateSession(
-            CachedSession(
-                originalSession!!.sessionId,
-                sessionDate,
-                service,
-                barber,
-                customerName,
-                contact,
-                nextDate,
-                dateOfBirth = dateOfBirth,
-                location = location,
-                status = status,
-                createdAt = originalSession!!.createdAt,
-                updatedAt = originalSession!!.updatedAt
-            )
+        val newSession = CachedSession(
+            originalSession!!.sessionId,
+            sessionDate,
+            service,
+            barber,
+            customerName,
+            contact,
+            nextDate,
+            dateOfBirth = dateOfBirth,
+            location = location,
+            status = status,
+            createdAt = originalSession!!.createdAt,
+            updatedAt = originalSession!!.updatedAt
         )
+
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                sessionDao!!.updateSession(
+                    newSession
+                )
+                val apiSessionVersion = CachedSessionToApiSession(newSession)
+                try {
+                    RetrofitFactory.createConnectionService().editSession(
+                        apiSessionVersion.sessionId!!,
+                        apiSessionVersion
+                    )
+                } catch (e: Exception) {
+//                    toast("not api updated coz ${e.message}")
+                    // Error
+                }
+            }
+            finish()
+        }
+
     }
 
     private fun loadItemDetails() {
