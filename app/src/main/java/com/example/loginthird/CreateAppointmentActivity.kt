@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.*
 import com.example.loginthird.databinding.ActivityCreateAppointmentBinding
 import com.example.loginthird.retrofit.RequestCreateSession
+import com.example.loginthird.singleton.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,6 +74,7 @@ class CreateAppointmentActivity : BaseActivity() {
                 finish()
             }
         }
+        binding.edittextBarber.setText(User.instance.userName)
     }
 
     private fun checkDateFormats(dateList: List<String>): Boolean {

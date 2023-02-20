@@ -2,6 +2,7 @@ package com.example.loginthird
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.loginthird.activities.AppointmentListActivity
 import com.example.loginthird.databinding.ActivityDashboardBinding
 import com.example.loginthird.databinding.ActivityLoginBinding
 
@@ -15,6 +16,10 @@ class DashboardActivity : AppCompatActivity() {
 
         binding.buttonCreateAppointment.setOnClickListener {
             openActivity(CreateAppointmentActivity::class.java)
+        }
+
+        binding.buttonOpenAppointmentList.setOnClickListener {
+            openActivity(AppointmentListActivity::class.java)
         }
     }
 }

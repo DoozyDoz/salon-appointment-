@@ -10,6 +10,7 @@ import com.example.loginthird.cache.SalonDatabase
 import com.example.loginthird.cache.models.CacheSessionMapper
 import com.example.loginthird.models.UISession
 import com.example.loginthird.retrofit.RetrofitFactory
+import com.example.loginthird.singleton.User
 import kotlinx.coroutines.launch
 
 
@@ -30,7 +31,7 @@ class AppointmentListViewmodel(application: Application) : AndroidViewModel(appl
 
     val sessions: LiveData<List<UISession>> =
         Transformations.map(sessionDao.getSessions()) { cachedSessions ->
-            cachedSessions.map { cachedSession ->
+            cachedSessions.filter { it.barber.equals(User.instance.userName) }.map { cachedSession ->
                 CacheSessionMapper().mapToDomain(cachedSession)
             }
         }
