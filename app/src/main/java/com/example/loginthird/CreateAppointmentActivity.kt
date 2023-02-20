@@ -1,17 +1,16 @@
 package com.example.loginthird
 
-import android.R
 import android.app.DatePickerDialog
 import android.content.pm.PackageInstaller.EXTRA_SESSION_ID
 import android.os.Bundle
-import android.text.Selection.setSelection
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import com.example.loginthird.api.models.CachedSessionToApiSession
 import com.example.loginthird.cache.CachedSession
 import com.example.loginthird.cache.SalonDatabase
 import com.example.loginthird.cache.SessionDao
-import com.example.loginthird.databinding.ActivityCreateAppointmentBinding
+import com.example.loginthird.databinding.ActivityCreateSessionBinding
 import com.example.loginthird.retrofit.RequestCreateSession
 import com.example.loginthird.retrofit.RetrofitFactory
 import com.example.loginthird.singleton.User
@@ -21,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CreateAppointmentActivity : BaseActivity() {
-    private lateinit var binding: ActivityCreateAppointmentBinding
+    private lateinit var binding: ActivityCreateSessionBinding
     private lateinit var sessionDate: String
     private lateinit var service: String
     private lateinit var barber: String
@@ -35,8 +34,8 @@ class CreateAppointmentActivity : BaseActivity() {
     private var sessionDao: SessionDao? = null
     private var isEditMode = false
     private var sessionId: String? = null
-    private var statusSpinnerAdapter: ArrayAdapter<String>? = null
     private var originalSession: CachedSession? = null
+    private var pageTitle:String = "Create Session"
 
     companion object {
         const val EXTRA_SESSION_ID = "extra_session_id"
@@ -44,65 +43,56 @@ class CreateAppointmentActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCreateAppointmentBinding.inflate(layoutInflater)
+        binding = ActivityCreateSessionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         sessionDao = SalonDatabase.getInstance(application).sessionDao()
 
-        val items = listOf("pending", "done", "cancel")
-        statusSpinnerAdapter = ArrayAdapter(this, R.layout.simple_spinner_item, items)
-        statusSpinnerAdapter!!.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-        val spinner = binding.statusSpinner
-        spinner.adapter = statusSpinnerAdapter
-        val defaultPosition = 0
-        spinner.setSelection(defaultPosition)
-
         if (intent.hasExtra(EXTRA_SESSION_ID)) {
             sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
             isEditMode = false
+            pageTitle = "Edit Session"
             // Disable the edit texts and change the button text to "Edit"
-            binding.textviewSessionDate.isEnabled = false
+            binding.pickerSessionDate.isEnabled = false
             binding.edittextService.isEnabled = false
-            binding.edittextCustomerName.isEnabled = false
-            binding.edittextCustomerContact.isEnabled = false
-            binding.textViewDateOfBirth.isEnabled = false
+            binding.edittextCustomer.isEnabled = false
+            binding.edittextContact.isEnabled = false
+            binding.pickerBirthDate.isEnabled = false
             binding.edittextLocation.isEnabled = false
-//            binding.statusSpinner.isEnabled = false
-//            binding.textViewNextDate.isEnabled = false
-            binding.buttonSaveNewAppointment.text = "Edit"
-            // Load the item details into the edit texts
+            binding.buttonSubmit.text = "Edit"
             loadItemDetails()
         } else {
             isEditMode = true
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val formattedDate = dateFormat.format(currentDate)
-            binding.textviewSessionDate.text = formattedDate
+            binding.pickerSessionDate.setText(formattedDate)
             binding.edittextBarber.setText(User.instance.userName)
         }
 
+        initToolbar()
 
-        val selectedItemPosition = spinner.selectedItemPosition
-        status = if (selectedItemPosition == 0) {
-            spinner.getItemAtPosition(0).toString()
-        } else {
-            spinner.selectedItem.toString()
+//        val selectedItemPosition = spinner.selectedItemPosition
+//        status = if (selectedItemPosition == 0) {
+//            spinner.getItemAtPosition(0).toString()
+//        } else {
+//            spinner.selectedItem.toString()
+//        }
+
+
+        binding.pickerSessionDate.setOnClickListener {
+            showDatePickerDialog(binding.pickerSessionDate)
         }
 
-
-        binding.textviewSessionDate.setOnClickListener {
-            showDatePickerDialog(binding.textviewSessionDate)
+        binding.pickerBirthDate.setOnClickListener {
+            showDatePickerDialog(binding.pickerBirthDate)
         }
 
-        binding.textViewDateOfBirth.setOnClickListener {
-            showDatePickerDialog(binding.textViewDateOfBirth)
+        binding.pickerNextDate.setOnClickListener {
+            showDatePickerDialog(binding.pickerNextDate)
         }
 
-        binding.textViewNextDate.setOnClickListener {
-            showDatePickerDialog(binding.textViewNextDate)
-        }
-
-        binding.buttonSaveNewAppointment.setOnClickListener {
+        binding.buttonSubmit.setOnClickListener {
             if (isEditMode) {
                 createSession {
                     finish()
@@ -113,24 +103,51 @@ class CreateAppointmentActivity : BaseActivity() {
                 }
             }
         }
+
+        binding.pickerStatus.setOnClickListener {
+            showStatusDialog(binding.pickerStatus)
+        }
+    }
+
+    private fun showStatusDialog(v: View) {
+        val array = arrayOf(
+            "pending", "done", "cancel"
+        )
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Status")
+        builder.setSingleChoiceItems(
+            array, -1
+        ) { dialogInterface, i ->
+            (v as EditText).setText(array[i])
+            dialogInterface.dismiss()
+        }
+        builder.show()
+    }
+
+    private fun initToolbar() {
+        val toolbar = binding.toolbar.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = pageTitle
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        Tools.setSystemBarColor(this)
     }
 
     private fun updateSession(function: () -> Unit) {
-        sessionDate = binding.textviewSessionDate.text.toString()
+        sessionDate = binding.pickerSessionDate.text.toString()
         service = binding.edittextService.text.toString()
         barber = binding.edittextBarber.text.toString()
-        customerName = binding.edittextCustomerName.text.toString()
-        contact = binding.edittextCustomerContact.text.toString()
-        nextDate = binding.textViewNextDate.text.toString()
-        dateOfBirth = binding.textViewDateOfBirth.text.toString()
+        customerName = binding.edittextCustomer.text.toString()
+        contact = binding.edittextContact.text.toString()
+        nextDate = binding.pickerNextDate.text.toString()
+        dateOfBirth = binding.pickerBirthDate.text.toString()
         location = binding.edittextLocation.text.toString()
 
-        val selectedItemPosition = binding.statusSpinner.selectedItemPosition
-        status = if (selectedItemPosition == 0) {
-            binding.statusSpinner.getItemAtPosition(0).toString()
-        } else {
-            binding.statusSpinner.selectedItem.toString()
-        }
+//        val selectedItemPosition = binding.statusSpinner.selectedItemPosition
+//        status = if (selectedItemPosition == 0) {
+//            binding.statusSpinner.getItemAtPosition(0).toString()
+//        } else {
+//            binding.statusSpinner.selectedItem.toString()
+//        }
 
         val newSession = CachedSession(
             originalSession!!.sessionId,
@@ -175,20 +192,15 @@ class CreateAppointmentActivity : BaseActivity() {
             }
             originalSession = session
             // Load the item details into the edit texts
-            binding.textviewSessionDate.text = session!!.sessionDate
-            binding.textviewSessionDate.text = session!!.sessionDate
+            binding.pickerSessionDate.setText(session!!.sessionDate)
             binding.edittextService.setText(session.service)
             binding.edittextBarber.setText(session.barber)
-            binding.edittextCustomerName.setText(session.customerName)
-            binding.edittextCustomerContact.setText(session.customerContact)
-            binding.textViewDateOfBirth.text = session.dateOfBirth
+            binding.edittextCustomer.setText(session.customerName)
+            binding.edittextContact.setText(session.customerContact)
+            binding.pickerBirthDate.setText(session.dateOfBirth)
             binding.edittextLocation.setText(session.location)
-
-            val position = statusSpinnerAdapter?.getPosition(session.status)
-            if (position != Spinner.INVALID_POSITION) {
-                binding.statusSpinner.setSelection(position!!)
-            }
-            binding.textViewNextDate.text = session.nextAppointmentDate
+            binding.pickerStatus.setText(session.status)
+            binding.pickerNextDate.setText(session.nextAppointmentDate)
         }
     }
 
@@ -217,13 +229,13 @@ class CreateAppointmentActivity : BaseActivity() {
         getSpinnerSelection()
 
 
-        sessionDate = binding.textviewSessionDate.text.toString()
+        sessionDate = binding.pickerSessionDate.text.toString()
         service = binding.edittextService.text.toString()
         barber = binding.edittextBarber.text.toString()
-        customerName = binding.edittextCustomerName.text.toString()
-        contact = binding.edittextCustomerContact.text.toString()
-        nextDate = binding.textViewNextDate.text.toString()
-        dateOfBirth = binding.textViewDateOfBirth.text.toString()
+        customerName = binding.edittextCustomer.text.toString()
+        contact = binding.edittextContact.text.toString()
+        nextDate = binding.pickerNextDate.text.toString()
+        dateOfBirth = binding.pickerBirthDate.text.toString()
         location = binding.edittextLocation.text.toString()
 
 
@@ -256,26 +268,26 @@ class CreateAppointmentActivity : BaseActivity() {
     }
 
     private fun getSpinnerSelection() {
-        binding.statusSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selectedStatus = parent.getItemAtPosition(position) as String
-                status = selectedStatus
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                status = "Pending"
-            }
-        }
+//        binding.statusSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                val selectedStatus = parent.getItemAtPosition(position) as String
+//                status = selectedStatus
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>) {
+//                status = "Pending"
+//            }
+//        }
 
     }
 
     private fun sanitizeInput() {
-        val phoneNumberEditText = binding.edittextCustomerContact
+        val phoneNumberEditText = binding.edittextContact
         val phoneNumber = phoneNumberEditText.text.toString().trim()
 
         if (phoneNumber.length == 10 && phoneNumber.startsWith("0")) {
