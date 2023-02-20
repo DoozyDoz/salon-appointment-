@@ -9,7 +9,7 @@ class CacheSessionMapper : ApiMapper<CachedSession, UISession> {
     override fun mapToDomain(cacheEntity: CachedSession): UISession {
         return UISession(
             id = cacheEntity.sessionId,
-            title = cacheEntity.sessionDate.orEmpty(),
+            title = cacheEntity.nextAppointmentDate.orEmpty(),
             completed = cacheEntity.status == "done"
         )
     }
