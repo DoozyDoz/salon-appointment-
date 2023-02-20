@@ -31,7 +31,10 @@ class AppointmentListViewmodel(application: Application) : AndroidViewModel(appl
 
     val sessions: LiveData<List<UISession>> =
         Transformations.map(sessionDao.getSessions()) { cachedSessions ->
-            cachedSessions.filter { it.barber.equals(User.instance.userName) }.map { cachedSession ->
+//            cachedSessions.filter { it.barber.equals(User.instance.userName) }.map { cachedSession ->
+//                CacheSessionMapper().mapToDomain(cachedSession)
+//            }
+            cachedSessions.filter { it.barber.equals("sempala") }.map { cachedSession ->
                 CacheSessionMapper().mapToDomain(cachedSession)
             }
         }

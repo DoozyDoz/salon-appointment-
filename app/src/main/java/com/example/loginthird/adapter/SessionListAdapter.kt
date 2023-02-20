@@ -1,13 +1,16 @@
 package com.example.loginthird.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.loginthird.CreateAppointmentActivity
 import com.example.loginthird.R
 import com.example.loginthird.models.UISession
+import kotlinx.coroutines.withContext
 
 
 class SessionListAdapter(private val sessions: List<UISession>) :
@@ -41,9 +44,6 @@ class SessionListAdapter(private val sessions: List<UISession>) :
             PENDING_SESSION_VIEW_TYPE -> {
                 val pendingHolder = holder as PendingSessionViewHolder
                 pendingHolder.titleTextView.text = session.title
-                pendingHolder.completeButton.setOnClickListener {
-                    // Do something when complete button is clicked
-                }
             }
             COMPLETED_SESSION_VIEW_TYPE -> {
                 val completedHolder = holder as CompletedSessionViewHolder
@@ -61,6 +61,14 @@ class SessionListAdapter(private val sessions: List<UISession>) :
     class PendingSessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.session_title_pending)
         val completeButton: Button = itemView.findViewById(R.id.session_complete_button)
+
+        fun bind(session: UISession) {
+            completeButton.setOnClickListener {
+                val intent = Intent(itemView.context, CreateAppointmentActivity::class.java)
+                intent.putExtra("session_id", session.id)
+                itemView.context.startActivity(intent)
+            }
+        }
     }
 
     class CompletedSessionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
