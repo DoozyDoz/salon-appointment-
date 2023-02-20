@@ -1,13 +1,17 @@
 package com.example.loginthird.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.loginthird.CreateAppointmentActivity
+import com.example.loginthird.CreateAppointmentActivity.Companion.EXTRA_SESSION_ID
 import com.example.loginthird.R
 import com.example.loginthird.models.UISession
+import kotlinx.coroutines.withContext
 
 
 class SessionListAdapter(private val sessions: List<UISession>) :
@@ -42,7 +46,9 @@ class SessionListAdapter(private val sessions: List<UISession>) :
                 val pendingHolder = holder as PendingSessionViewHolder
                 pendingHolder.titleTextView.text = session.title
                 pendingHolder.completeButton.setOnClickListener {
-                    // Do something when complete button is clicked
+                    val intent = Intent(pendingHolder.itemView.context, CreateAppointmentActivity::class.java)
+                    intent.putExtra(EXTRA_SESSION_ID, session.id)
+                    pendingHolder.itemView.context.startActivity(intent)
                 }
             }
             COMPLETED_SESSION_VIEW_TYPE -> {

@@ -1,10 +1,7 @@
 package com.example.loginthird.cache
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 
 @Dao
@@ -14,4 +11,10 @@ interface SessionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSessions(sessions: List<CachedSession>)
+
+    @Query("SELECT * FROM sessions WHERE sessionId = :id")
+    fun getSessionById(id: String): CachedSession?
+
+    @Update
+    fun updateSession(session: CachedSession)
 }

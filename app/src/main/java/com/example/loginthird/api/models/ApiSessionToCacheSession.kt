@@ -20,3 +20,20 @@ fun ApiSessionToCacheSession(apiSession: ApiSession): CachedSession {
         updatedAt = apiSession.updateDate
     )
 }
+
+fun CachedSessionToApiSession(cachedSession: CachedSession): ApiSession {
+    return ApiSession(
+        sessionId = cachedSession.sessionId,
+        sessionDate = cachedSession.sessionDate,
+        service = cachedSession.service,
+        barber = cachedSession.barber,
+        customerName = cachedSession.customerName,
+        customerContact = cachedSession.customerContact,
+        nextAppointmentDate = cachedSession.nextAppointmentDate,
+        dateOfBirth = cachedSession.dateOfBirth,
+        Location = cachedSession.location,
+        status = cachedSession.status,
+        creationDate = cachedSession.createdAt,
+        updateDate = cachedSession.updatedAt
+    )
+}
