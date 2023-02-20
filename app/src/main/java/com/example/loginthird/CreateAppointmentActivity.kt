@@ -2,16 +2,16 @@ package com.example.loginthird
 
 import android.R
 import android.app.DatePickerDialog
-import android.content.pm.PackageInstaller.EXTRA_SESSION_ID
 import android.os.Bundle
 import android.text.Selection.setSelection
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import com.example.loginthird.api.models.CachedSessionToApiSession
 import com.example.loginthird.cache.CachedSession
 import com.example.loginthird.cache.SalonDatabase
 import com.example.loginthird.cache.SessionDao
-import com.example.loginthird.databinding.ActivityCreateAppointmentBinding
+import com.example.loginthird.databinding.ActivityCreateSessionBinding
 import com.example.loginthird.retrofit.RequestCreateSession
 import com.example.loginthird.retrofit.RetrofitFactory
 import com.example.loginthird.singleton.User
@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CreateAppointmentActivity : BaseActivity() {
-    private lateinit var binding: ActivityCreateAppointmentBinding
+    private lateinit var binding: ActivityCreateSessionBinding
     private lateinit var sessionDate: String
     private lateinit var service: String
     private lateinit var barber: String
@@ -44,8 +44,10 @@ class CreateAppointmentActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCreateAppointmentBinding.inflate(layoutInflater)
+        binding = ActivityCreateSessionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initToolbar()
 
         sessionDao = SalonDatabase.getInstance(application).sessionDao()
 
@@ -61,15 +63,15 @@ class CreateAppointmentActivity : BaseActivity() {
             sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
             isEditMode = false
             // Disable the edit texts and change the button text to "Edit"
-            binding.textviewSessionDate.isEnabled = false
+            binding.pickerSessionDate.isEnabled = false
             binding.edittextService.isEnabled = false
-            binding.edittextCustomerName.isEnabled = false
-            binding.edittextCustomerContact.isEnabled = false
-            binding.textViewDateOfBirth.isEnabled = false
+            binding.edittextCustomer.isEnabled = false
+            binding.edittextContact.isEnabled = false
+            binding.pickerBirthDate.isEnabled = false
             binding.edittextLocation.isEnabled = false
 //            binding.statusSpinner.isEnabled = false
 //            binding.textViewNextDate.isEnabled = false
-            binding.buttonSaveNewAppointment.text = "Edit"
+            binding.buttonSubmit.text = "Edit"
             // Load the item details into the edit texts
             loadItemDetails()
         } else {
@@ -77,7 +79,7 @@ class CreateAppointmentActivity : BaseActivity() {
             val currentDate = Date()
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
             val formattedDate = dateFormat.format(currentDate)
-            binding.textviewSessionDate.text = formattedDate
+            binding.pickerSessionDate.setText(formattedDate)
             binding.edittextBarber.setText(User.instance.userName)
         }
 
@@ -90,19 +92,19 @@ class CreateAppointmentActivity : BaseActivity() {
         }
 
 
-        binding.textviewSessionDate.setOnClickListener {
-            showDatePickerDialog(binding.textviewSessionDate)
+        binding.pickerSessionDate.setOnClickListener {
+            showDatePickerDialog(binding.pickerSessionDate)
         }
 
-        binding.textViewDateOfBirth.setOnClickListener {
-            showDatePickerDialog(binding.textViewDateOfBirth)
+        binding.pickerBirthDate.setOnClickListener {
+            showDatePickerDialog(binding.pickerBirthDate)
         }
 
-        binding.textViewNextDate.setOnClickListener {
-            showDatePickerDialog(binding.textViewNextDate)
+        binding.pickerNextDate.setOnClickListener {
+            showDatePickerDialog(binding.pickerNextDate)
         }
 
-        binding.buttonSaveNewAppointment.setOnClickListener {
+        binding.buttonSubmit.setOnClickListener {
             if (isEditMode) {
                 createSession {
                     finish()
@@ -115,14 +117,22 @@ class CreateAppointmentActivity : BaseActivity() {
         }
     }
 
+    private fun initToolbar() {
+        val toolbar = binding.toolbar.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = "Session Details"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        Tools.setSystemBarColor(this)
+    }
+
     private fun updateSession(function: () -> Unit) {
-        sessionDate = binding.textviewSessionDate.text.toString()
+        sessionDate = binding.pickerSessionDate.text.toString()
         service = binding.edittextService.text.toString()
         barber = binding.edittextBarber.text.toString()
-        customerName = binding.edittextCustomerName.text.toString()
-        contact = binding.edittextCustomerContact.text.toString()
-        nextDate = binding.textViewNextDate.text.toString()
-        dateOfBirth = binding.textViewDateOfBirth.text.toString()
+        customerName = binding.edittextCustomer.text.toString()
+        contact = binding.edittextContact.text.toString()
+        nextDate = binding.pickerNextDate.text.toString()
+        dateOfBirth = binding.pickerBirthDate.text.toString()
         location = binding.edittextLocation.text.toString()
 
         val selectedItemPosition = binding.statusSpinner.selectedItemPosition
@@ -175,20 +185,19 @@ class CreateAppointmentActivity : BaseActivity() {
             }
             originalSession = session
             // Load the item details into the edit texts
-            binding.textviewSessionDate.text = session!!.sessionDate
-            binding.textviewSessionDate.text = session!!.sessionDate
+            binding.pickerSessionDate.setText(session!!.sessionDate)
             binding.edittextService.setText(session.service)
             binding.edittextBarber.setText(session.barber)
-            binding.edittextCustomerName.setText(session.customerName)
-            binding.edittextCustomerContact.setText(session.customerContact)
-            binding.textViewDateOfBirth.text = session.dateOfBirth
+            binding.edittextCustomer.setText(session.customerName)
+            binding.edittextContact.setText(session.customerContact)
+            binding.pickerBirthDate.setText(session.dateOfBirth)
             binding.edittextLocation.setText(session.location)
 
             val position = statusSpinnerAdapter?.getPosition(session.status)
             if (position != Spinner.INVALID_POSITION) {
                 binding.statusSpinner.setSelection(position!!)
             }
-            binding.textViewNextDate.text = session.nextAppointmentDate
+            binding.pickerNextDate.setText(session.nextAppointmentDate)
         }
     }
 
@@ -217,13 +226,13 @@ class CreateAppointmentActivity : BaseActivity() {
         getSpinnerSelection()
 
 
-        sessionDate = binding.textviewSessionDate.text.toString()
+        sessionDate = binding.pickerSessionDate.text.toString()
         service = binding.edittextService.text.toString()
         barber = binding.edittextBarber.text.toString()
-        customerName = binding.edittextCustomerName.text.toString()
-        contact = binding.edittextCustomerContact.text.toString()
-        nextDate = binding.textViewNextDate.text.toString()
-        dateOfBirth = binding.textViewDateOfBirth.text.toString()
+        customerName = binding.edittextCustomer.text.toString()
+        contact = binding.edittextContact.text.toString()
+        nextDate = binding.pickerNextDate.text.toString()
+        dateOfBirth = binding.pickerBirthDate.text.toString()
         location = binding.edittextLocation.text.toString()
 
 
@@ -275,7 +284,7 @@ class CreateAppointmentActivity : BaseActivity() {
     }
 
     private fun sanitizeInput() {
-        val phoneNumberEditText = binding.edittextCustomerContact
+        val phoneNumberEditText = binding.edittextContact
         val phoneNumber = phoneNumberEditText.text.toString().trim()
 
         if (phoneNumber.length == 10 && phoneNumber.startsWith("0")) {
