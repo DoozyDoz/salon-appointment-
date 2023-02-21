@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loginthird.BaseActivity
 import com.example.loginthird.R
+import com.example.loginthird.Tools
 import com.example.loginthird.adapter.SessionListAdapter
 import com.example.loginthird.databinding.ActivityAppointmentListBinding
 import com.example.loginthird.models.UISession
@@ -28,6 +29,8 @@ class AppointmentListActivity : BaseActivity() {
         binding = ActivityAppointmentListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initToolbar()
+
 
         val sessionList = findViewById<RecyclerView>(R.id.session_list)
         sessionList.layoutManager = LinearLayoutManager(this)
@@ -41,6 +44,14 @@ class AppointmentListActivity : BaseActivity() {
 //            val adapter = SessionListAdapter(sessions)
 //            sessionList.adapter = adapter
 //        }
+    }
+
+    private fun initToolbar() {
+        val toolbar = binding.toolbar.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = "Session List"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        Tools.setSystemBarColor(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

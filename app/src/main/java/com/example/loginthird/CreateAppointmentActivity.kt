@@ -35,7 +35,7 @@ class CreateAppointmentActivity : BaseActivity() {
     private var isEditMode = false
     private var sessionId: String? = null
     private var originalSession: CachedSession? = null
-    private var pageTitle:String = "Create Session"
+    private var pageTitle: String = "Create Session"
 
     companion object {
         const val EXTRA_SESSION_ID = "extra_session_id"
@@ -71,13 +71,6 @@ class CreateAppointmentActivity : BaseActivity() {
         }
 
         initToolbar()
-
-//        val selectedItemPosition = spinner.selectedItemPosition
-//        status = if (selectedItemPosition == 0) {
-//            spinner.getItemAtPosition(0).toString()
-//        } else {
-//            spinner.selectedItem.toString()
-//        }
 
 
         binding.pickerSessionDate.setOnClickListener {
@@ -141,13 +134,8 @@ class CreateAppointmentActivity : BaseActivity() {
         nextDate = binding.pickerNextDate.text.toString()
         dateOfBirth = binding.pickerBirthDate.text.toString()
         location = binding.edittextLocation.text.toString()
+        status = binding.pickerStatus.text.toString()
 
-//        val selectedItemPosition = binding.statusSpinner.selectedItemPosition
-//        status = if (selectedItemPosition == 0) {
-//            binding.statusSpinner.getItemAtPosition(0).toString()
-//        } else {
-//            binding.statusSpinner.selectedItem.toString()
-//        }
 
         val newSession = CachedSession(
             originalSession!!.sessionId,
