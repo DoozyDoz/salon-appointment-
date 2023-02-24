@@ -12,6 +12,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/blue_grey_600</item>
         <item name="android:dialogTheme">@style/Dialog.Theme</item>
+        <item name="android:fontFamily">@font/montserrat</item>
     </style>
 
     <style name="BaseTheme.Material" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -23,6 +24,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/blue_grey_600</item>
         <item name="android:dialogTheme">@style/Dialog.Theme</item>
+        <item name="android:fontFamily">@font/montserrat</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
